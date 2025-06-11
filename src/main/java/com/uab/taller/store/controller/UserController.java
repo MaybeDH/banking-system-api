@@ -2,12 +2,20 @@ package com.uab.taller.store.controller;
 
 import com.uab.taller.store.domain.User;
 import com.uab.taller.store.domain.dto.request.CreateUserRequest;
+import com.uab.taller.store.domain.dto.request.LoginRequest;
+import com.uab.taller.store.service.IUserService;
+import com.uab.taller.store.service.UserServiceImp;
 import com.uab.taller.store.usecase.user.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.models.info.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
 @CrossOrigin
 
 @RestController
@@ -31,6 +39,12 @@ public class UserController {
 
     @Autowired
     UpdateUserUseCase updateUserUseCase;
+    @Autowired
+    IUserService userService;
+
+
+    @Autowired
+    private UserServiceImp userServiceImp;
 
     @Operation(
             summary = "Obtener todos los usuarios"
@@ -78,5 +92,12 @@ public class UserController {
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody CreateUserRequest createUserRequest) {
         return updateUserUseCase.execute(id, createUserRequest);
+    }
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
+        Optional<User> user = userServiceImp.login(loginRequest.getEmail(), loginRequest.getPassword());
+        return user
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

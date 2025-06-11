@@ -13,4 +13,7 @@ public interface IUserService {
     void deleteUserById(Long id);
     User saveUser(User user);
     Optional<User> getUserByEmail(String email);
+    User authenticate(String email, String password);
+    Optional<User> login(String email, String password);
+
 }
