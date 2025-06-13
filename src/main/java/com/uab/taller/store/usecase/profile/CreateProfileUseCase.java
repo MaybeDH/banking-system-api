@@ -14,8 +14,6 @@ public class CreateProfileUseCase {
         Profile profile = new Profile();
         profile.setName(profileRequest.getName());
         profile.setLastName(profileRequest.getLastName());
-        profile.setBirthday(profileRequest.getBirthday());
-        profile.setGender(profileRequest.getGender());
         return profileService.saveProfile(profile);
 
     }

@@ -15,8 +15,12 @@ public class UpdateProfileUseCase {
         Profile profile = profileService.getProfileById(id);
         profile.setName(profileRequest.getName());
         profile.setLastName(profileRequest.getLastName());
-        profile.setBirthday(profileRequest.getBirthday());
-        profile.setGender(profileRequest.getGender());
+        profile.setCi(profileRequest.getCi());
+        profile.setMobile(profileRequest.getMobile());
+        profile.setAddress(profileRequest.getAddress());
+
+//        profile.setGender(profileRequest.getGender());
+//        profile.setBirthday(profileRequest.getBirthday());
         return profileService.updateProfile(id, profile);
     }
 }

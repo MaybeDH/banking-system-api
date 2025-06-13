@@ -1,10 +1,16 @@
 package com.uab.taller.store.service;
 
+import com.uab.taller.store.domain.Profile;
+import com.uab.taller.store.domain.Rol;
 import com.uab.taller.store.domain.User;
+import com.uab.taller.store.domain.dto.request.UserRequest;
+import com.uab.taller.store.domain.dto.response.UserResponse;
+import com.uab.taller.store.repository.RolRepository;
 import com.uab.taller.store.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +19,13 @@ public class UserServiceImp implements IUserService {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RolRepository rolRepository;
+
     public UserServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     @Override
     public List<User> getAll() {
         return userRepository.findAll();
@@ -39,10 +49,10 @@ public class UserServiceImp implements IUserService {
         return userRepository.findUserByEmail(email);
     }
 
-    @Override
-    public User authenticate(String email, String password) {
-        return null;
-    }
+//    @Override
+//    public User authenticate(String email, String password) {
+//        return null;
+//    }
 
     /*@Override
     public User authenticate(String email, String password) {

@@ -18,9 +18,11 @@ public class SaveUserUseCase {
     public User save(CreateUserRequest createUserRequest) {
         Profile profile = new Profile();
         profile.setName(createUserRequest.getName());
-        profile.setGender(createUserRequest.getGender());
-        profile.setBirthday(createUserRequest.getBirthday());
         profile.setLastName(createUserRequest.getLastName());
+        profile.setAddress(createUserRequest.getAddress());
+        profile.setCi(createUserRequest.getCi());
+        profile.setAddUser(createUserRequest.getAddress());
+        profile.setMobile(createUserRequest.getMobile());
         profile = profileService.saveProfile(profile);
 
         User user = new User();

@@ -14,7 +14,4 @@ public class GetUsersUseCase {
         return userService.getAll();
     }
 
-    public User getUserById(Long id){
-        return userService.getUserById(id);
-    }
 }

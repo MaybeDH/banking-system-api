@@ -10,5 +10,7 @@ public interface IAccountService {
     public Account save(Account account);
     public void delete(Long id);
     public Account getById(Long id);
+    List<Account> findByUserId(Long id);
+
 
 }

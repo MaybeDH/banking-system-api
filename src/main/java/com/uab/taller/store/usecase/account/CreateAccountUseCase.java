@@ -8,6 +8,7 @@ import com.uab.taller.store.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -24,10 +25,15 @@ public class CreateAccountUseCase {
         }
 
         Account account = new Account();
-        account.setNumber(generateAccountNumber());
-        account.setCurrencyType(accountRequest.getCurrencyType());
+        account.setAccountNumber(generateAccountNumber());
+        account.setCurrency(accountRequest.getCurrency());
+        account.setType(accountRequest.getType());
         account.setBalance(accountRequest.getBalance());
+        account.setStatus(accountRequest.getStatus());
         account.setUser(user);
+
+        account.setAddDate(LocalDateTime.now());
+        account.setAddUser("");
         return accountService.save(account);
 
     }

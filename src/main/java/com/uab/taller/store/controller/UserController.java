@@ -1,10 +1,9 @@
 package com.uab.taller.store.controller;
 
-import com.uab.taller.store.domain.User;
+import com.uab.taller.store.domain.*;
 import com.uab.taller.store.domain.dto.request.CreateUserRequest;
 import com.uab.taller.store.domain.dto.request.LoginRequest;
-import com.uab.taller.store.service.IUserService;
-import com.uab.taller.store.service.UserServiceImp;
+import com.uab.taller.store.service.*;
 import com.uab.taller.store.usecase.user.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.models.info.Contact;
@@ -13,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.Role;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,37 +22,24 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/users")
 public class UserController {
-
-    @Autowired
-    GetUsersUseCase getUsersUseCase;
-
-    @Autowired
-    GetUserByIdUseCase getUserByIdUseCase;
-
-    @Autowired
-    DeleteUserUseCase deleteUserUseCase;
-
-    @Autowired
-    SaveUserUseCase saveUserUseCase;
-
-    @Autowired
-    GetUserByEmailCase getUserByEmailUseCase;
-
-    @Autowired
-    UpdateUserUseCase updateUserUseCase;
     @Autowired
     IUserService userService;
-
-
     @Autowired
-    private UserServiceImp userServiceImp;
-
+    IProfileService profileService;
+    @Autowired
+    IAccountService accountService;
+    @Autowired
+    IBeneficiaryService beneficiaryService;
+    @Autowired
+    IRolService rolService;
+    @Autowired
+    UserServiceImp userServiceImp;
     @Operation(
             summary = "Obtener todos los usuarios"
     )
     @GetMapping
     public List<User> getUsers() {
-        return getUsersUseCase.getUsers();
+        return userService.getAll();
     }
 
     @Operation(
@@ -59,7 +47,7 @@ public class UserController {
     )
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
-        return getUserByIdUseCase.getUserById(id);
+        return userService.getUserById(id);
     }
 
     @Operation(
@@ -67,7 +55,8 @@ public class UserController {
     )
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable Long id) {
-        deleteUserUseCase.deleteUserById(id);
+
+        userService.deleteUserById(id);
     }
 
     @Operation(
@@ -75,15 +64,23 @@ public class UserController {
     )
     @PostMapping
     public User saveUser(@RequestBody CreateUserRequest createUserRequest) {
-        return saveUserUseCase.save(createUserRequest);
-    }
 
-    @Operation(
-            summary = "Obtener un usuario por email"
-    )
-    @GetMapping(value = "/email/{email}")
-    public User getUserByEmail(@PathVariable String email) {
-        return getUserByEmailUseCase.getUserByEmail(email);
+        Profile profile = new Profile();
+        profile.setName(createUserRequest.getName());
+        profile.setLastName(createUserRequest.getLastName());
+        profile.setAddress(createUserRequest.getAddress());
+        profile.setCi(createUserRequest.getCi());
+        profile.setAddUser(createUserRequest.getAddress());
+        profile.setMobile(createUserRequest.getMobile());
+        profile = profileService.saveProfile(profile);
+
+        User user = new User();
+        user.setPassword(createUserRequest.getPassword());
+        user.setEmail(createUserRequest.getEmail());
+        user.setProfile(profile);
+        Rol rol = rolService.getById(createUserRequest.getRolId());
+        user.setRol(rol);
+        return userService.saveUser(user);
     }
 
     @Operation(
@@ -91,8 +88,41 @@ public class UserController {
     )
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody CreateUserRequest createUserRequest) {
-        return updateUserUseCase.execute(id, createUserRequest);
+        User user = userService.getUserById(id);
+        Profile profile = user.getProfile();
+        profile.setName(createUserRequest.getName());
+//        profile.setGender(createUserRequest.getGender());
+//        profile.setBirthday(createUserRequest.getBirthday());
+        profile.setLastName(createUserRequest.getLastName());
+        profile.setCi(createUserRequest.getCi());
+        profile.setMobile(createUserRequest.getMobile());
+        profile.setAddress(createUserRequest.getAddress());
+        profile.setStatus(createUserRequest.getStatus());
+        profile.setChangeDate(LocalDateTime.now());
+        profile.setChangeUser("");
+
+        profile = profileService.saveProfile(profile);
+//        Rol rol = rolService.getRolById(createUserRequest.getRolId());
+//        Rol rol = rolService.getProfileById(createUserRequest.getRolId());
+
+        user.setEmail(createUserRequest.getEmail());
+        user.setPassword(createUserRequest.getPassword());
+        user.setProfile(profile);
+//        user.setRol(rol);
+        user.setChangeDate(LocalDateTime.now());
+        user.setChangeUser("");
+
+        return userService.saveUser(user);
+
     }
+//    @Operation(
+//            summary = "Obtener un usuario por email"
+//    )
+//    @GetMapping(value = "/email/{email}")
+//    public User getUserByEmail(@PathVariable String email) {
+//        return getUserByEmailUseCase.getUserByEmail(email);
+
+//    }
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
         Optional<User> user = userServiceImp.login(loginRequest.getEmail(), loginRequest.getPassword());
@@ -100,4 +130,6 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+
 }

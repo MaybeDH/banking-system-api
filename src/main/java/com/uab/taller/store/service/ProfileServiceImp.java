@@ -37,8 +37,6 @@ public class ProfileServiceImp implements IProfileService{
         Profile existingProfile = getProfileById(id);
         existingProfile.setName(profile.getName());
         existingProfile.setLastName(profile.getLastName());
-        existingProfile.setBirthday(profile.getBirthday());
-        existingProfile.setGender(profile.getGender());
         return profileRepository.save(existingProfile);
     }
 

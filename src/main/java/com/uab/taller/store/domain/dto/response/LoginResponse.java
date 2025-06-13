@@ -1,4 +1,4 @@
-package com.uab.taller.store.domain.dto.request;
+package com.uab.taller.store.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class LoginResponse {
+    Long userId;
     String email;
-    String password;
+    String nombre;
+    String rol;
 }
