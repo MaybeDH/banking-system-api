@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.event.IIOReadProgressListener;
 import java.util.List;
+@CrossOrigin
 
 @RestController
 @RequestMapping("Rol")
