@@ -4,6 +4,7 @@ import com.uab.taller.store.domain.Rol;
 import com.uab.taller.store.domain.Transaction;
 import com.uab.taller.store.domain.dto.request.RolRequest;
 import com.uab.taller.store.service.IRolService;
+import com.uab.taller.store.usecase.rol.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,31 +17,35 @@ import java.util.List;
 public class RolController {
     @Autowired
     IRolService rolService;
+    @Autowired
+    CreateRolUseCase createRolUseCase;
+    @Autowired
+    DeleteRolUseCase deleteRolUseCase;
+    @Autowired
+    UpdateRolUseCase updateRolUseCase;
+    @Autowired
+    GetAllRolUseCase getAllRolUseCase;
+    @Autowired
+    GetByIdRolUseCase getByIdRolUseCase;
 
     @GetMapping
     public List<Rol> getAllByRol(){
-        return rolService.getAll();
+        return getAllRolUseCase.getAllByRol();
     }
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id){
-        rolService.deleteById(id);
+        deleteRolUseCase.deleteById(id);
     }
     @GetMapping("/{id}")
     public Rol getById(@PathVariable Long id){
-        return rolService.getById(id);
+        return getByIdRolUseCase.getById(id);
     }
     @PostMapping
     public Rol create(@RequestBody RolRequest rolRequest){
-        Rol rol = new Rol();
-        rol.setName(rolRequest.getName());
-        rol.setDescription(rolRequest.getDescription());
-        return rolService.save(rol);
+        return createRolUseCase.create(rolRequest);
     }
     @PutMapping("/{id}")
     public Rol update(@PathVariable Long id, @RequestBody RolRequest rolRequest){
-        Rol rol = rolService.getById(id);
-        rol.setName(rolRequest.getName());
-        rol.setDescription(rolRequest.getDescription());
-        return rolService.save(rol);
+        return updateRolUseCase.update(id, rolRequest);
     }
 }
