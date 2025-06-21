@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @Setter
 public class ProfileResponse {
+    Long id;
     String name;
     String lastName;
     String ci;

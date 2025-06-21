@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 @Service
 public class ProfileServiceImp implements IProfileService{
 
@@ -40,4 +41,7 @@ public class ProfileServiceImp implements IProfileService{
         return profileRepository.save(existingProfile);
     }
 
+    public Optional<Profile> findByCi(String ci) {
+        return profileRepository.findByCi(ci);
+    }
 }

@@ -6,6 +6,8 @@ import com.uab.taller.store.service.IProfileService;
 import com.uab.taller.store.usecase.profile.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -18,29 +20,30 @@ import java.util.List;
 public class ProfileController {
     @Autowired
     IProfileService profileService;
+    @Autowired
+    CreateProfileUseCase createProfileUseCase;
+    @Autowired
+    UpdateProfileUseCase updateProfileUseCase;
+    @Autowired
+    DeleteProfileUseCase deleteProfileUseCase;
+    @Autowired
+    GetAllProfilesUseCase getAllProfilesUseCase;
+    @Autowired
+    GetProfileByIdUseCase getProfileByIdUseCase;
+
     @Operation(
             summary = "Obtener todas los perfiles"
     )
     @GetMapping
     public List<Profile> getProfiles() {
-        return profileService.getAll();
+        return getAllProfilesUseCase.getProfiles();
     }
     @Operation(
             summary = "Crear una nuevo perfil"
     )
     @PostMapping
     public Profile saveProfile(@RequestBody ProfileRequest profileRequest) {
-        Profile profile = new Profile();
-        profile.setName(profileRequest.getName());
-        profile.setLastName(profileRequest.getLastName());
-        profile.setCi(profileRequest.getCi());
-        profile.setMobile(profileRequest.getMobile());
-        profile.setAddress(profileRequest.getAddress());
-        profile.setStatus(profileRequest.getStatus());
-        profile.setAddDate(LocalDateTime.now());
-        profile.setAddUser("system");
-        profile.setDeleted(false);
-        return profileService.saveProfile(profile);
+        return createProfileUseCase.saveProfile(profileRequest);
 
     }
     @Operation(
@@ -49,36 +52,21 @@ public class ProfileController {
     @GetMapping("/{id}")
     public Profile getProfileById(@PathVariable Long id) {
 
-        return profileService.getProfileById(id);
+        return getProfileByIdUseCase.getProfileById(id);
     }
     @Operation(
             summary = "Eliminar un perfil por ID"
     )
     @DeleteMapping("/{id}")
-    public void deleteProfileById(@PathVariable Long id) {
-        Profile profile = profileService.getProfileById(id);
-        profile.setDeleted(true);
-        profile.setChangeDate(LocalDateTime.now());
-        profile.setChangeUser("system");
-        profileService.saveProfile(profile);
-
+    public ResponseEntity<?> deleteProfileById(@PathVariable Long id) {
+        return deleteProfileUseCase.deleteProfileById(id);
     }
     @Operation(
             summary = "Actualizar un perfil existente por ID"
     )
     @PutMapping("/{id}")
     public Profile updateProfile(@PathVariable Long id, @RequestBody ProfileRequest profileRequest) {
-        Profile profile = profileService.getProfileById(id);
-        profile.setName(profileRequest.getName());
-        profile.setLastName(profileRequest.getLastName());
-        profile.setCi(profileRequest.getCi());
-        profile.setMobile(profileRequest.getMobile());
-        profile.setAddress(profileRequest.getAddress());
-        profile.setStatus(profileRequest.getStatus());
-        profile.setChangeDate(LocalDateTime.now());
-        profile.setChangeUser("system");
-
-        return profileService.updateProfile(id, profile);
+        return updateProfileUseCase.updateProfile(id, profileRequest);
 
     }
 }
