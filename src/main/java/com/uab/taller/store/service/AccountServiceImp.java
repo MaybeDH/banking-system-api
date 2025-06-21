@@ -34,5 +34,11 @@ public class AccountServiceImp implements IAccountService {
         return accountRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public List<Account> findByUserId(Long id){
+        return accountRepository.findByUserId(id);
+    }
+
+
 
 }

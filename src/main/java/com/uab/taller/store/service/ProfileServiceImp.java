@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 @Service
 public class ProfileServiceImp implements IProfileService{
 
@@ -37,9 +38,10 @@ public class ProfileServiceImp implements IProfileService{
         Profile existingProfile = getProfileById(id);
         existingProfile.setName(profile.getName());
         existingProfile.setLastName(profile.getLastName());
-        existingProfile.setBirthday(profile.getBirthday());
-        existingProfile.setGender(profile.getGender());
         return profileRepository.save(existingProfile);
     }
 
+    public Optional<Profile> findByCi(String ci) {
+        return profileRepository.findByCi(ci);
+    }
 }

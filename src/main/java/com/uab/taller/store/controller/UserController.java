@@ -1,50 +1,43 @@
 package com.uab.taller.store.controller;
 
-import com.uab.taller.store.domain.User;
+import com.uab.taller.store.domain.*;
 import com.uab.taller.store.domain.dto.request.CreateUserRequest;
 import com.uab.taller.store.domain.dto.request.LoginRequest;
-import com.uab.taller.store.service.IUserService;
-import com.uab.taller.store.service.UserServiceImp;
+import com.uab.taller.store.domain.dto.response.ProfileResponse;
+import com.uab.taller.store.domain.dto.response.RolResponse;
+import com.uab.taller.store.domain.dto.response.UserResponse;
+import com.uab.taller.store.service.*;
 import com.uab.taller.store.usecase.user.*;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.models.info.Contact;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin
 
 @RestController
 @RequestMapping(value = "/users")
+@Validated
 public class UserController {
-
-    @Autowired
-    GetUsersUseCase getUsersUseCase;
-
-    @Autowired
-    GetUserByIdUseCase getUserByIdUseCase;
-
     @Autowired
     DeleteUserUseCase deleteUserUseCase;
-
+    @Autowired
+    GetUserByEmailCase getUserByEmailCase;
+    @Autowired
+    GetUserByIdUseCase getUserByIdCase;
+    @Autowired
+    GetUsersUseCase getUsersUseCase;
     @Autowired
     SaveUserUseCase saveUserUseCase;
-
-    @Autowired
-    GetUserByEmailCase getUserByEmailUseCase;
-
     @Autowired
     UpdateUserUseCase updateUserUseCase;
     @Autowired
-    IUserService userService;
+    loginUseCase loginUseCase;
 
-
-    @Autowired
-    private UserServiceImp userServiceImp;
 
     @Operation(
             summary = "Obtener todos los usuarios"
@@ -52,6 +45,7 @@ public class UserController {
     @GetMapping
     public List<User> getUsers() {
         return getUsersUseCase.getUsers();
+
     }
 
     @Operation(
@@ -59,31 +53,23 @@ public class UserController {
     )
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id) {
-        return getUserByIdUseCase.getUserById(id);
+        return getUserByIdCase.getUserById(id);
     }
 
     @Operation(
             summary = "Eliminar un usuario por ID"
     )
     @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Long id) {
-        deleteUserUseCase.deleteUserById(id);
+    public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
+        return deleteUserUseCase.deleteUserById(id);
     }
 
     @Operation(
             summary = "Crear un nuevo usuario"
     )
     @PostMapping
-    public User saveUser(@RequestBody CreateUserRequest createUserRequest) {
-        return saveUserUseCase.save(createUserRequest);
-    }
-
-    @Operation(
-            summary = "Obtener un usuario por email"
-    )
-    @GetMapping(value = "/email/{email}")
-    public User getUserByEmail(@PathVariable String email) {
-        return getUserByEmailUseCase.getUserByEmail(email);
+    public ResponseEntity<?> saveUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
+        return  saveUserUseCase.saveUser(createUserRequest);
     }
 
     @Operation(
@@ -91,13 +77,23 @@ public class UserController {
     )
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody CreateUserRequest createUserRequest) {
-        return updateUserUseCase.execute(id, createUserRequest);
+        return updateUserUseCase.updateUser(id, createUserRequest);
+
     }
+//    @Operation(
+//            summary = "Obtener un usuario por email"
+//    )
+//    @GetMapping(value = "/email/{email}")
+//    public User getUserByEmail(@PathVariable String email) {
+//        return getUserByEmailUseCase.getUserByEmail(email);
+
+//    }
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
-        Optional<User> user = userServiceImp.login(loginRequest.getEmail(), loginRequest.getPassword());
-        return user
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) {
+        return loginUseCase.login(loginRequest);
     }
+
+
+
+
 }

@@ -1,15 +1,19 @@
 package com.uab.taller.store.domain.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class ProfileRequest {
     String name;
     String lastName;
-    LocalDate birthday;
-    String gender;
+    String ci;
+    String mobile;
+    String address;
+    String status;
 }
