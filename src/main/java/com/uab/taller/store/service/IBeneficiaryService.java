@@ -10,6 +10,6 @@ public interface IBeneficiaryService {
     Beneficiary getById(Long id);
     Beneficiary  save(Beneficiary beneficiary);
     void delete(Long id);
-    List<Beneficiary> getByUserId(Long userId);
+    List<Beneficiary> findByUserId(Long id);
 
 }

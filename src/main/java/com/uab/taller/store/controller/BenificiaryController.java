@@ -8,6 +8,9 @@ import com.uab.taller.store.repository.BeneficiaryRepository;
 import com.uab.taller.store.service.IAccountService;
 import com.uab.taller.store.service.IBeneficiaryService;
 import com.uab.taller.store.service.IUserService;
+import com.uab.taller.store.usecase.account.GetAccountByIdUseCase;
+import com.uab.taller.store.usecase.account.GetAllAccountsUseCase;
+import com.uab.taller.store.usecase.beneficiary.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,54 +28,45 @@ public class BenificiaryController {
     @Autowired
     IUserService userService;
 
+    @Autowired
+    CreateUseCase createUseCase;
+    @Autowired
+    DeleteUseCase deleteUseCase;
+    @Autowired
+    GetAllUseCase getAllUseCase;
+    @Autowired
+    UpdateUseCase updateUseCase;
+    @Autowired
+    GetByIdUseCase getByIdUseCase;
+    @Autowired
+    GetBeneficiaryByUserIdUseCase getBeneficiaryByUserIdUseCase;
+
+
     @GetMapping
     public List<Beneficiary> getAllBeneficiaries() {
-        return beneficiaryService.getAll();
+        return getAllUseCase.getAllBeneficiaries();
+
     }
     @DeleteMapping("/{id}")
     public void deleteBeneficiary(@PathVariable Long id){
-        Beneficiary beneficiary =getBeneficiaryById(id);
-        beneficiary.setDeleted(true);
-        beneficiary.setChangeUser("system");
-        beneficiaryService.save(beneficiary);
+        deleteUseCase.deleteBeneficiary(id);
     }
     @GetMapping("/{id}")
     public Beneficiary getBeneficiaryById(@PathVariable Long id){
-        return beneficiaryService.getById(id);
+        return getByIdUseCase.getBeneficiaryById(id);
     }
     @PostMapping
     public Beneficiary createBeneficiary(@RequestBody BeneficiaryRequest beneficiaryRequest){
-        User user = userService.getUserById(beneficiaryRequest.getUserId());
-        Account account = accountService.getById(beneficiaryRequest.getAccountId());
-
-        Beneficiary beneficiary = new Beneficiary();
-        beneficiary.setAddDate(LocalDateTime.now());
-        beneficiary.setAddUser("System");
-        beneficiary.setChangeDate(LocalDateTime.now());
-        beneficiary.setChangeUser("System");
-        beneficiary.setDeleted(false);
-        beneficiary.setAccount(account);
-        beneficiary.setUser(user);
-
-        return beneficiaryService.save(beneficiary);
+        return createUseCase.createBeneficiary(beneficiaryRequest);
     }
     @PutMapping("/{id}")
     public Beneficiary updateBeneficiary(@PathVariable Long id, @RequestBody BeneficiaryRequest beneficiaryRequest){
-        Beneficiary beneficiary = beneficiaryService.getById(id);
-        User user = userService.getUserById(beneficiaryRequest.getUserId());
-        Account account = accountService.getById(beneficiaryRequest.getAccountId());
-
-        beneficiary.setChangeDate(LocalDateTime.now());
-        beneficiary.setChangeUser("system");
-        beneficiary.setUser(user);
-        beneficiary.setAccount(account);
-
-        return beneficiaryService.save(beneficiary);
+        return updateUseCase.updateBeneficiary(id, beneficiaryRequest);
 
     }
 
-//    @GetMapping("/user/{userId}")
-//    public List<Beneficiary> getBeneficiariesByUserId(@PathVariable Long userId) {
-//        return beneficiaryService.getByUserId(userId);
-//    }
+    @GetMapping("/user/{userId}")
+    public List<Beneficiary> getBeneficiariesByUserId(@PathVariable Long userId) {
+        return getBeneficiaryByUserIdUseCase.getBeneficiariesByUserId(userId);
+    }
 }

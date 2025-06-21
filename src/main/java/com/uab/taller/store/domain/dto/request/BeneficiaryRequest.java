@@ -5,6 +5,7 @@ import lombok.*;
 @Getter
 @Setter
 public class BeneficiaryRequest {
+    String alias;
     Long userId;
     Long accountId;
 }

@@ -30,9 +30,8 @@ public class BeneficiaryServiceImp implements IBeneficiaryService{
         beneficiaryRepository.deleteById(id);
     }
     @Override
-    public List<Beneficiary> getByUserId(Long userId) {
-//        return beneficiaryRepository.findByUserUserId(userId);
-        return null;
+    public List<Beneficiary> findByUserId(Long id) {
+        return beneficiaryRepository.findByUserId(id);
     }
 
 
