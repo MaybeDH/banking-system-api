@@ -18,8 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value="/profiles")
 public class ProfileController {
-    @Autowired
-    IProfileService profileService;
+
     @Autowired
     CreateProfileUseCase createProfileUseCase;
     @Autowired

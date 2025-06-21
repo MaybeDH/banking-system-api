@@ -21,12 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "beneficiary")
 public class BenificiaryController {
-    @Autowired
-    IBeneficiaryService beneficiaryService;
-    @Autowired
-    IAccountService accountService;
-    @Autowired
-    IUserService userService;
+
 
     @Autowired
     CreateUseCase createUseCase;

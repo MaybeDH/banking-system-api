@@ -28,10 +28,6 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/accounts")
 public class AccountController {
     @Autowired
-    IAccountService accountService;
-    @Autowired
-    IUserService userService;
-    @Autowired
     GetAccountsByUserIdUseCase getAccountsByUserIdUseCase;
     @Autowired
     CreateAccountUseCase createAccountUseCase;

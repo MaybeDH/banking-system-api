@@ -24,14 +24,6 @@ import java.util.List;
 @Validated
 public class UserController {
     @Autowired
-    IUserService userService;
-    @Autowired
-    IProfileService profileService;
-    @Autowired
-    IRolService rolService;
-    @Autowired
-    UserServiceImp userServiceImp;
-    @Autowired
     DeleteUserUseCase deleteUserUseCase;
     @Autowired
     GetUserByEmailCase getUserByEmailCase;

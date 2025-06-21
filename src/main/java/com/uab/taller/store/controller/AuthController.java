@@ -20,12 +20,6 @@ public class AuthController {
     UserServiceImp userServiceImp;
 
 
-//    @PostMapping("/login")
-//    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest){
-//        Optional<User> user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-//        return user.map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
         Optional<User> user = userServiceImp.login(loginRequest.getEmail(), loginRequest.getPassword());
