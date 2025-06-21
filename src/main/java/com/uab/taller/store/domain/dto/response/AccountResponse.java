@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 public class AccountResponse {
+
     String accountNumber;
     String currency;
     String type;
@@ -17,5 +18,6 @@ public class AccountResponse {
 //    double balance;
     BigDecimal balance;
     String status;
-//    Long userId;
+    Long userId;
+    Long accountId;
 }

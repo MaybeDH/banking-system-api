@@ -34,8 +34,10 @@ public class Account {
     String type;
     BigDecimal balance;
     String status;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     User user;
 }

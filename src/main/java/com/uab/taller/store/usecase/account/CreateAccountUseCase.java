@@ -19,11 +19,6 @@ public class CreateAccountUseCase {
     IUserService userService;
     public Account execute(AccountRequest accountRequest){
         User user = userService.getUserById(accountRequest.getUserId());
-        if(user == null){
-            System.out.println("User not found");
-            return null;
-        }
-
         Account account = new Account();
         account.setAccountNumber(generateAccountNumber());
         account.setCurrency(accountRequest.getCurrency());
@@ -33,14 +28,15 @@ public class CreateAccountUseCase {
         account.setUser(user);
 
         account.setAddDate(LocalDateTime.now());
-        account.setAddUser("");
+        account.setAddUser("system");
+        account.setDeleted(false);
         return accountService.save(account);
 
     }
 
     public int generateAccountNumber(){
         Random random = new Random();
-        return 1000100000 + random.nextInt(99999);
+        return 1000000000 + random.nextInt(99999);
 
     }
 }
